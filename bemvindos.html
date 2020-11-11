@@ -1,0 +1,25 @@
+<!doctype html>
+<html ng-app="mensagem">
+<head>
+<meta charset="utf-8">
+
+<script src="angular/anguar.js"></script>
+<script>
+angular.module("mensagem",[])
+angular.module("mensagem").controller("mensagemCtrl",
+function($scope){
+	$scope.message = "Olá, sejam bem Vindos!! ";
+	
+});
+</script>
+	
+	
+<title>Bem Vindos</title>
+</head>
+
+<body>
+<div ng-controller="mensagemCtrl">
+	{{message}}
+</div>	
+</body>
+</html>

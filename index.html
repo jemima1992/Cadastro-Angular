@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html ng-app="CadClientes">
+<head>
+<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.css">
+    
+    <script src="angular/angular.js"></script>
+    <script src="angular/angular-locale_pt-br.js"></script>
+    <script src="diretivas/dir-alerta.js"></script>
+    
+	
+<script>
+angular.module("CadClientes", []);
+angular.module("CadClientes").controller("CadClientesCtrl",function($scope) {
+	$scope.app = "Cadastro de Clientes";
+	$scope.clientes = [
+	{nome: "Hugo", codigo: "0001", data: new Date(), valor: "100"},
+	{nome: "Grazi", codigo: "0002", data: new Date(), valor: "200"},
+	{nome: "Paloma", codigo: "0003", data: new Date(), valor: "50"}
+	];
+    
+    $scope.tipoClientes = [
+    {tipo: "Pessoa Física", codigo: "01", local: "Nacional"},
+    {tipo: "Pessoa Jurídica", codigo: "02", local: "Nacional"},
+    {tipo: "Sócios", codigo: "04", local: "Nacional"},
+    {tipo: "Exportador", codigo: "04", local: "Internacional"},
+    {tipo: "Importador", codigo: "05", local: "Internacional"}    
+    ];
+    
+    $scope.adicionarClientes = function(cliente) {
+        $scope.clientes.push(angular.copy(cliente));
+        delete $scope.cliente;
+    };
+    
+    $scope.apagarClientes = function (clientes){
+        $scope.clientes = clientes.filter(function (cliente){
+            if(!cliente.selecionado) return cliente;
+        });
+    };
+    $scope.temclienteSelecionado = function (clientes){
+        return clientes.some(function(cliente){
+        return cliente.selecionado;    
+        });
+    }
+    
+    $scope.classe1 = "selecionado";
+    $scope.classe2 = "negrito";
+ 	
+});
+</script>	
+	
+<title>Cadastro de Clientes</title>
+</head>
+
+<body ng-controller="CadClientesCtrl">
+<div class="jumbotron"><h3> {{app}} </h3>
+    
+<div dir-alerta></div>
+    
+<input type="text" class="form-control" ng-model="Buscar" placeholder="Busque Aqui">    
+<table ng-show="clientes.length > 0" class="table">
+<tr>
+<td> </td>
+<td><b>Nome</b></td>
+<td><b>Codigo</b></td>
+<td><b>Tipo Cliente</b></td>
+<td><b>Data de Cadastro</b></td>
+<td><b>Valor da Compra</b></td>    
+</tr>
+<tr ng-class="{'selecionado negrito': cliente.selecionado}" ng-repeat="cliente in clientes | filter:Buscar | orderBy:'nome'| limitTo:2">
+<td> <input type="checkbox" ng-model="cliente.selecionado"> </td>
+<td> {{cliente.nome | uppercase}} </td>
+<td> {{cliente.codigo}} </td>
+<td> {{cliente.tipoClientes.tipo}} </td>
+<td> {{cliente.data | date: 'dd/MM/yyyy'}} </td>
+<td> {{cliente.valor | currency}} </td>
+</tr>
+</table>
+<hr>
+<form name="clienteForm">  
+<input class="form-control" type="text" ng-model="cliente.nome" placeholder="Nome" ng-required="true">
+<input class="form-control" type="text" ng-model="cliente.scodigo" placeholder="Código" ng-required="true">
+<select class="form-control" ng-model="cliente.tipoClientes" ng-options="tipoCliente.tipo for tipoCliente in tipoClientes" ng-required="true">
+<option value="">Selecione um tipo de cliente</option>    
+</select>
+</form>
+    
+<button class="btn btn-primary btn-block" ng-click="adicionatClientes(cliente)" ng-disabled="clienteForm.$invalid"> Adicionar Cliente </button>
+    
+<button class="btn btn-danger btn-block" ng-click="apagarClientes(clientes)" ng-if="temclienteSelecionado(clientes)"> Apagar Cliente </button>
+    
+
+    
+</div>
+    
+<div ng-include="'rodape.html'"></div>
+    
+</body>
+    
+</html>
